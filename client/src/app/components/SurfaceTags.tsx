@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 const SurfaceTags: React.FC = () => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [copySuccess, setCopySuccess] = useState('');
+  const [testConnectionStatus, setTestConnectionStatus] = useState('');
 
   const toggleAccordion = () => {
     setIsAccordionOpen(!isAccordionOpen);
@@ -25,9 +27,33 @@ const SurfaceTags: React.FC = () => {
 </script>
   `;
 
+  // Function to handle copying the snippet
+  const handleCopy = () => {
+    navigator.clipboard.writeText(codeString)
+      .then(() => {
+        setCopySuccess('Snippet copied!');
+        setTimeout(() => setCopySuccess(''), 2000); // Clear message after 2 seconds
+      })
+      .catch(() => setCopySuccess('Failed to copy.'));
+  };
+
+  // Function to simulate connection testing
+  const handleTestConnection = () => {
+    setTestConnectionStatus('Testing connection...');
+    setTimeout(() => {
+      const success = Math.random() > 0.5;  // Random success/failure for simulation
+      if (success) {
+        setTestConnectionStatus('Connection successful!');
+      } else {
+        setTestConnectionStatus('Connection failed.');
+      }
+    }, 2000);  // Simulate a delay for testing
+  };
+
   return (
     <div className="flex-1 bg-white p-6">
-      <h1 className="text-2xl font-semibold mb-4">Getting started</h1>
+      {/* Fix for text color */}
+      <h1 className="text-2xl font-semibold mb-4 text-black">Getting started</h1>
 
       {/* Accordion for "Install the Surface Tag" */}
       <div className="bg-gray-100 p-6 rounded-lg shadow-lg mb-8">
@@ -41,11 +67,12 @@ const SurfaceTags: React.FC = () => {
         {isAccordionOpen && (
           <div className="bg-white p-4 rounded-md border mb-4">
             <pre className="bg-gray-900 text-white p-4 rounded-md text-xs overflow-auto">
-              <code>
-                {codeString}
-              </code>
+              <code>{codeString}</code>
             </pre>
-            <button className="bg-blue-500 text-white py-1 px-3 mt-4 rounded">Copy Snippet</button>
+            <button onClick={handleCopy} className="bg-blue-500 text-white py-1 px-3 mt-4 rounded">
+              Copy Snippet
+            </button>
+            {copySuccess && <p className="text-green-500 mt-2">{copySuccess}</p>}
           </div>
         )}
       </div>
@@ -53,7 +80,15 @@ const SurfaceTags: React.FC = () => {
       <div className="flex items-center mb-4">
         <span className="text-gray-700">Checking for Tag...</span>
       </div>
-      <button className="bg-gray-200 text-black py-2 px-4 rounded">Test connection</button>
+
+      {/* Test connection button with status */}
+      <button 
+        onClick={handleTestConnection} 
+        className="bg-gray-200 text-black py-2 px-4 rounded"
+      >
+        Test connection
+      </button>
+      {testConnectionStatus && <p className="mt-2 text-gray-700">{testConnectionStatus}</p>}
 
       {/* Test Surface Tag Events Section */}
       <div className="bg-gray-100 p-6 rounded-lg shadow-lg mt-6">
