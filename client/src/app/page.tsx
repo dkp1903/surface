@@ -1,4 +1,4 @@
-import Image from "next/image";
+"use client";
 import Sidebar from './components/Sidebar';
 import SurfaceTags from "./components/SurfaceTags";
 
